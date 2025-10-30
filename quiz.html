@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Interativo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #007bff, #6610f2);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background-color: rgba(0, 0, 0, 0.25);
+      padding: 20px 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 350px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .answer-btn {
+      background-color: white;
+      color: #333;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .answer-btn:hover {
+      background-color: #ddd;
+    }
+
+    #next-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+    }
+
+    #next-btn:hover {
+      background-color: #218838;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>🎯 Quiz de Conhecimentos Gerais</h1>
+
+    <div id="quiz">
+      <p id="question">Pergunta vai aqui...</p>
+      <div id="answers">
+        <button class="answer-btn">Opção 1</button>
+        <button class="answer-btn">Opção 2</button>
+        <button class="answer-btn">Opção 3</button>
+        <button class="answer-btn">Opção 4</button>
+      </div>
+      <button id="next-btn">Próxima</button>
+    </div>
+
+    <p id="result"></p>
+  </div>
+
+  <script>
+    // 🧩 Lista de perguntas
+    const questions = [
+      {
+        question: "Qual é a capital do Brasil?",
+        answers: ["São Paulo", "Brasília", "Rio de Janeiro", "Salvador"],
+        correct: 1
+      },
+      {
+        question: "Quanto é 5 + 3?",
+        answers: ["5", "8", "10", "7"],
+        correct: 1
+      },
+      {
+        question: "Quem pintou a Mona Lisa?",
+        answers: ["Van Gogh", "Michelangelo", "Leonardo da Vinci", "Picasso"],
+        correct: 2
+      },
+      {
+        question: "Qual planeta é conhecido como o Planeta Vermelho?",
+        answers: ["Terra", "Marte", "Júpiter", "Vênus"],
+        correct: 1
+      },
+      {
+        question: "Quantos dias tem um ano bissexto?",
+        answers: ["365", "366", "364", "360"],
+        correct: 1
+      }
+    ];
+
+    // 🔧 Variáveis de controle
+    let currentQuestion = 0;
+    let score = 0;
+
+    // 🔗 Ligação com o HTML
+    const questionElement = document.getElementById("question");
+    const answerButtons = document.querySelectorAll(".answer-btn");
+    const nextButton = document.getElementById("next-btn");
+    const resultElement = document.getElementById("result");
+
+    // 🧠 Função para mostrar a pergunta
+    function showQuestion() {
+      resetState();
+      const q = questions[currentQuestion];
+      questionElement.textContent = q.question;
+      answerButtons.forEach((btn, index) => {
+        btn.textContent = q.answers[index];
+        btn.onclick = () => selectAnswer(index);
+      });
+    }
+
+    // ✅ Quando o jogador escolhe uma resposta
+    function selectAnswer(index) {
+      const q = questions[currentQuestion];
+      if (index === q.correct) {
+        score++;
+        answerButtons[index].style.backgroundColor = "#28a745"; // verde
+      } else {
+        answerButtons[index].style.backgroundColor = "#dc3545"; // vermelho
+      }
+      nextButton.style.display = "block"; // mostra o botão "Próxima"
+    }
+
+    // 🔄 Limpar o estado antes da próxima pergunta
+    function resetState() {
+      nextButton.style.display = "none";
+      answerButtons.forEach(btn => {
+        btn.style.backgroundColor = "white";
+      });
+    }
+
+    // ⏭️ Quando clica em "Próxima"
+    nextButton.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    // 🏁 Mostrar resultado final
+    function showResult() {
+      questionElement.textContent = "";
+      document.getElementById("answers").style.display = "none";
+      nextButton.style.display = "none";
+      resultElement.textContent = `🎉 Você acertou ${score} de ${questions.length} perguntas!`;
+    }
+
+    // ▶️ Iniciar o quiz
+    showQuestion();
+  </script>
+</body>
+</html>
